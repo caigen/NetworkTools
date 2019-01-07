@@ -15,12 +15,13 @@ namespace UDPSender
 {
     public partial class UDPSender : Form
     {
+        private Socket socketUDP;
+
         private IPAddress ipAddress;
         private int port;
-        private int interval;
         private IPEndPoint ipEndPoint;
 
-        private Socket socketUDP;
+        private int interval;
         private byte[] dataBuffer;
 
         private int count = 0;
@@ -39,14 +40,14 @@ namespace UDPSender
         {
             try
             {
-                ipAddress = IPAddress.Parse(this.TextBoxIP.Text);
-                port = int.Parse(this.TextBoxPort.Text);
-                interval = int.Parse(this.TextBoxInterval.Text);
-                ipEndPoint = new IPEndPoint(ipAddress, port);
-
-                socketUDP = new Socket(ipEndPoint.AddressFamily,
+                socketUDP = new Socket(AddressFamily.InterNetwork, 
                     SocketType.Dgram, ProtocolType.Udp);
 
+                ipAddress = IPAddress.Parse(this.TextBoxIP.Text);
+                port = int.Parse(this.TextBoxPort.Text);
+                ipEndPoint = new IPEndPoint(ipAddress, port);
+
+                interval = int.Parse(this.TextBoxInterval.Text);
                 dataBuffer = Encoding.Default.GetBytes(this.TextBoxData.Text);
 
                 this.TimerSend.Enabled = true;
