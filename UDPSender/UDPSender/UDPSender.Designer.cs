@@ -36,12 +36,14 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.TimerSend = new System.Windows.Forms.Timer(this.components);
-            this.label3 = new System.Windows.Forms.Label();
-            this.TextBoxInterval = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.ButtonStop = new System.Windows.Forms.Button();
             this.LabelCount = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.TextBoxInterval = new System.Windows.Forms.TextBox();
+            this.TimerCheck = new System.Windows.Forms.Timer(this.components);
+            this.CheckBoxAsync = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // TextBoxData
@@ -101,23 +103,6 @@
             // 
             this.TimerSend.Tick += new System.EventHandler(this.TimerSend_Tick);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(243, 9);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(89, 12);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Interval: (ms)";
-            // 
-            // TextBoxInterval
-            // 
-            this.TextBoxInterval.Location = new System.Drawing.Point(245, 24);
-            this.TextBoxInterval.Name = "TextBoxInterval";
-            this.TextBoxInterval.Size = new System.Drawing.Size(87, 21);
-            this.TextBoxInterval.TabIndex = 7;
-            this.TextBoxInterval.Text = "100";
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -155,11 +140,46 @@
             this.label6.TabIndex = 11;
             this.label6.Text = "Sent:";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(243, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(89, 12);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Interval: (ms)";
+            // 
+            // TextBoxInterval
+            // 
+            this.TextBoxInterval.Location = new System.Drawing.Point(245, 24);
+            this.TextBoxInterval.Name = "TextBoxInterval";
+            this.TextBoxInterval.Size = new System.Drawing.Size(87, 21);
+            this.TextBoxInterval.TabIndex = 7;
+            this.TextBoxInterval.Text = "1000";
+            // 
+            // TimerCheck
+            // 
+            this.TimerCheck.Enabled = true;
+            this.TimerCheck.Tick += new System.EventHandler(this.TimerCheck_Tick);
+            // 
+            // CheckBoxAsync
+            // 
+            this.CheckBoxAsync.AutoSize = true;
+            this.CheckBoxAsync.Location = new System.Drawing.Point(160, 236);
+            this.CheckBoxAsync.Name = "CheckBoxAsync";
+            this.CheckBoxAsync.Size = new System.Drawing.Size(54, 16);
+            this.CheckBoxAsync.TabIndex = 12;
+            this.CheckBoxAsync.Text = "Async";
+            this.CheckBoxAsync.UseVisualStyleBackColor = true;
+            this.CheckBoxAsync.CheckedChanged += new System.EventHandler(this.CheckBoxAsync_CheckedChanged);
+            this.CheckBoxAsync.Click += new System.EventHandler(this.CheckBoxAsync_Click);
+            // 
             // UDPSender
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(340, 262);
+            this.Controls.Add(this.CheckBoxAsync);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.LabelCount);
             this.Controls.Add(this.ButtonStop);
@@ -188,12 +208,14 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Timer TimerSend;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button ButtonStop;
-        private System.Windows.Forms.TextBox TextBoxInterval;
         private System.Windows.Forms.Label LabelCount;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox TextBoxInterval;
+        private System.Windows.Forms.Timer TimerCheck;
+        private System.Windows.Forms.CheckBox CheckBoxAsync;
     }
 }
 

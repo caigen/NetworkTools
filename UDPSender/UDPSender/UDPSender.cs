@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace UDPSender
 {
@@ -21,7 +22,14 @@ namespace UDPSender
 
         private Socket socketUDP;
         private byte[] dataBuffer;
-        
+
+        private int count = 0;
+
+        // SendToAsync
+        private bool async = false;
+        private SocketAsyncEventArgs socketAsyncEventArgs;
+        private Mutex mutex = new Mutex();
+
         public UDPSender()
         {
             InitializeComponent();
@@ -43,7 +51,19 @@ namespace UDPSender
 
                 this.TimerSend.Enabled = true;
                 this.TimerSend.Interval = interval;
-                this.LabelCount.Text = "0";
+                count = 0;
+                this.LabelCount.Text = count.ToString();
+
+                // SendToAsync
+                if (async)
+                {
+                    this.TimerCheck.Interval = interval;
+
+                    socketAsyncEventArgs = new SocketAsyncEventArgs();
+                    socketAsyncEventArgs.RemoteEndPoint = ipEndPoint;
+                    socketAsyncEventArgs.Completed += new EventHandler<SocketAsyncEventArgs>(AsyncCompleted);
+                    socketAsyncEventArgs.SetBuffer(dataBuffer, 0, dataBuffer.Length);
+                }
             }
             catch (Exception)
             {
@@ -58,9 +78,64 @@ namespace UDPSender
 
         private void TimerSend_Tick(object sender, EventArgs e)
         {
-            socketUDP.SendTo(dataBuffer, ipEndPoint);
-            int count = int.Parse(this.LabelCount.Text) + 1;
+            if (!async)
+            {
+                socketUDP.SendTo(dataBuffer, ipEndPoint);
+
+                ++count;
+                this.LabelCount.Text = count.ToString();
+            }
+            else
+            {
+                if (!socketUDP.SendToAsync(socketAsyncEventArgs))
+                {
+                    ++count;
+                    this.LabelCount.Text = count.ToString();
+                }
+            }
+        }
+
+        private void AsyncCompleted(object sender, SocketAsyncEventArgs e)
+        {
+            switch (e.LastOperation)
+            {
+                case SocketAsyncOperation.SendTo:
+                    ProcessSendToAsync(e);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void ProcessSendToAsync(SocketAsyncEventArgs e)
+        {
+            if (e.BytesTransferred > 0)
+            {
+                mutex.WaitOne();
+
+                ++count;
+
+                mutex.ReleaseMutex();
+            }
+        }
+
+        private void TimerCheck_Tick(object sender, EventArgs e)
+        {
+            mutex.WaitOne();
+
             this.LabelCount.Text = count.ToString();
+
+            mutex.ReleaseMutex();
+        }
+
+        private void CheckBoxAsync_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CheckBoxAsync_CheckedChanged(object sender, EventArgs e)
+        {
+            async = this.CheckBoxAsync.Checked;
         }
     }
 }
